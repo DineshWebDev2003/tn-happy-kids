@@ -1,0 +1,65 @@
+{
+  "name": "tn-happy-kids-learning",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DineshWebDev2003/tn-happy-kids.git"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/comic-neue": "^5.2.5",
+    "@mui/icons-material": "^5.15.11",
+    "@mui/material": "^5.13.0",
+    "@react-three/drei": "^9.74.6",
+    "@react-three/fiber": "^8.13.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "firebase": "^9.23.0",
+    "framer-motion": "^10.12.16",
+    "gsap": "^3.12.5",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.97.0",
+    "react": "^18.2.0",
+    "react-confetti": "^6.4.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^6.11.2",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.8",
+    "three": "^0.152.2",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.2.7",
+    "@types/react-dom": "^18.2.4",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/three": "^0.152.1"
+  }
+}
