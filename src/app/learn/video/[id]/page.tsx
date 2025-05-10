@@ -78,4 +78,4 @@ export default function VideoPlayerPage({ params }: { params: { id: string } }) 
       )}
     </div>
   );
-} 
+}
