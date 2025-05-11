@@ -10,8 +10,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  output: 'export',
-  distDir: 'out',
+  output: 'standalone',
+  distDir: '.next',
   trailingSlash: true,
 };
 
