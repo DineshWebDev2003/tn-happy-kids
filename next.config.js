@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     domains: ['firebasestorage.googleapis.com', 'lh3.googleusercontent.com'],
+    unoptimized: true,
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -9,8 +10,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  output: 'standalone',
-  distDir: '.next',
+  output: 'export',
+  distDir: 'out',
+  trailingSlash: true,
 };
 
 module.exports = nextConfig; 
