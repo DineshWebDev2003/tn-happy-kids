@@ -1,3 +1,5 @@
+"use client";
+
 import VideoLessonCard from '@/components/video-lesson-card';
 import { videoLessons } from '@/data/mock-data';
 import { Video } from 'lucide-react';
