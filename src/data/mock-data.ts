@@ -50,6 +50,9 @@ export const games: Game[] = [
   { id: '2', title: 'Color Champions', description: 'Explore the vibrant world of colors.', IconName: 'Palette', href: '/learn/games/colors', imageHint: 'paint palette' },
   { id: '3', title: 'Shape Shifters', description: 'Identify and match different shapes.', IconName: 'Shapes', href: '/learn/games/shapes', imageHint: 'geometric shapes' },
   { id: '4', title: 'Memory Masters', description: 'Boost your memory with exciting challenges.', IconName: 'Brain', href: '/learn/games/memory', imageHint: 'brain puzzle' },
+  { id: '5', title: 'Pattern Pals', description: 'Complete the sequence by finding the missing pattern!', IconName: 'ListChecks', href: '/learn/games/patterns', imageHint: 'pattern sequence' },
+  { id: '6', title: 'Traffic Rules', description: 'Learn and test your knowledge of traffic rules!', IconName: 'Car', href: '/learn/games/traffic', imageHint: 'traffic light and car' },
+  { id: '7', title: 'Escape the Dog', description: 'Use your voice to help the human escape the dog!', IconName: 'Running', href: '/learn/games/escape', imageHint: 'human running from dog' },
 ];
 
 export type Story = {

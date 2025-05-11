@@ -4,6 +4,7 @@ import { SmileIcon, UserCircle2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import Image from 'next/image';
 
 const AppHeader = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -17,7 +18,7 @@ const AppHeader = () => {
     <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-          <SmileIcon className="h-8 w-8 text-accent" />
+          <Image src="/images/logo.png" alt="Logo" width={32} height={32} className="h-8 w-8" />
           <h1 className="text-2xl font-bold">HappyKids Learn</h1>
         </Link>
         <div>

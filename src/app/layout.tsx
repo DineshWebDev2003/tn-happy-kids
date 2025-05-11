@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <Head>
-        <link rel="icon" href="/alphabets/kido-avatar.jpg" type="image/jpeg" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
       </Head>
       <body className="font-sans antialiased">
         <MainLayout>
