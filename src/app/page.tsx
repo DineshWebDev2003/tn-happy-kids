@@ -41,7 +41,7 @@ export default function HomePage() {
       <section className="text-center py-8 bg-gradient-to-r from-primary via-yellow-300 to-secondary rounded-xl shadow-lg">
         <div className="relative w-40 h-40 mx-auto mb-4">
            <Image 
-            src="/alphabets/kido-avatar.jpg" // Kido bot hero image
+            src="/images/kido-avatar.jpg" // Updated path
             alt="Kido Bot" 
             layout="fill"
             objectFit="cover"
