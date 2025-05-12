@@ -1,168 +1,266 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Volume2, VolumeX, Trophy, Settings, LanguagesIcon } from 'lucide-react';
+import EndlessRunner from './EndlessRunner';
 
-// Lazy load Three.js and GSAP only on client
-let THREE: any, gsap: any;
-if (typeof window !== 'undefined') {
-  // @ts-ignore
-  import('three').then(mod => (THREE = mod));
-  // @ts-ignore
-  import('gsap').then(mod => (gsap = mod));
-}
-
-const actions = ['left', 'right', 'jump', 'down', 'run'];
-
-export default function EscapeGame() {
-  const mountRef = useRef<HTMLDivElement>(null);
-  const [heard, setHeard] = useState('');
-  const [progress, setProgress] = useState(0);
+export default function SchoolRunnerGame() {
+  const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [win, setWin] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [language, setLanguage] = useState<'english' | 'tamil'>('english');
 
-  // Voice recognition setup
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    // @ts-ignore
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.lang = 'en-US';
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-      setHeard(transcript);
-      if (transcript.includes('left')) move('left');
-      if (transcript.includes('right')) move('right');
-      if (transcript.includes('jump')) move('jump');
-      if (transcript.includes('down')) move('down');
-      if (transcript.match(/run( run)?( run)?/)) move('run');
-    };
-    recognition.start();
-    return () => recognition.stop();
-  }, []);
-
-  // Three.js scene setup
-  useEffect(() => {
-    let scene: any, camera: any, renderer: any, human: any, dog: any, home: any, animId: any;
-    let humanPos = 0, dogPos = -5, speed = 0.05, running = false;
-    let jumpY = 0, jumping = false;
-    let leftRight = 0;
-    let finished = false;
-
-    async function init() {
-      THREE = (await import('three'));
-      gsap = (await import('gsap')).gsap;
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, 2, 0.1, 1000);
-      camera.position.set(0, 2, 8);
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(400, 300);
-      if (mountRef.current) mountRef.current.appendChild(renderer.domElement);
-
-      // Human (cube)
-      const humanGeo = new THREE.BoxGeometry(0.7, 1.2, 0.7);
-      const humanMat = new THREE.MeshStandardMaterial({ color: 0x4ade80 });
-      human = new THREE.Mesh(humanGeo, humanMat);
-      human.position.set(0, 0.6, humanPos);
-      scene.add(human);
-
-      // Dog (sphere)
-      const dogGeo = new THREE.SphereGeometry(0.6, 32, 32);
-      const dogMat = new THREE.MeshStandardMaterial({ color: 0xf87171 });
-      dog = new THREE.Mesh(dogGeo, dogMat);
-      dog.position.set(0, 0.6, dogPos);
-      scene.add(dog);
-
-      // Home (house shape)
-      const homeGeo = new THREE.ConeGeometry(1, 1.5, 4);
-      const homeMat = new THREE.MeshStandardMaterial({ color: 0xfacc15 });
-      home = new THREE.Mesh(homeGeo, homeMat);
-      home.position.set(0, 0.75, 10);
-      scene.add(home);
-
-      // Light
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(5, 10, 7.5);
-      scene.add(light);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
-      // Ground
-      const groundGeo = new THREE.PlaneGeometry(20, 30);
-      const groundMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
-      const ground = new THREE.Mesh(groundGeo, groundMat);
-      ground.rotation.x = -Math.PI / 2;
-      ground.position.y = 0;
-      scene.add(ground);
-
-      // Animate
-      function animate() {
-        if (finished) return;
-        // Move human forward
-        if (!win && !gameOver) {
-          humanPos += running ? speed * 2 : speed;
-          if (jumping) {
-            jumpY += 0.15;
-            if (jumpY > 1.5) jumping = false;
-          } else if (human.position.y > 0.6) {
-            jumpY -= 0.15;
-          }
-          human.position.y = 0.6 + Math.max(0, jumpY);
-          human.position.x = leftRight;
-          human.position.z = humanPos;
-          // Dog chases
-          if (dogPos < humanPos - 1) dogPos += speed * 1.2;
-          dog.position.z = dogPos;
-          // Progress
-          setProgress(Math.min(1, (humanPos + 5) / 15));
-          // Win/lose
-          if (humanPos >= 10) { setWin(true); finished = true; setTimeout(() => setGameOver(true), 1200); }
-          if (dogPos >= humanPos - 0.5) { setWin(false); finished = true; setTimeout(() => setGameOver(true), 1200); }
-        }
-        renderer.render(scene, camera);
-        animId = requestAnimationFrame(animate);
-      }
-      animate();
+  // Game messages based on language
+  const messages = {
+    english: {
+      title: "Run to School!",
+      description: "Help the girl reach school while avoiding obstacles and collecting school supplies!",
+      controls: "Controls",
+      settings: "Settings",
+      restart: "Play Again",
+      quit: "Back to Games",
+      gameOver: "Game Over!",
+      finalScore: "Your final score:",
+      tryAgain: "Try again to beat your high score!",
+      difficultyLabel: "Difficulty",
+      soundLabel: "Sound",
+      languageLabel: "Language"
+    },
+    tamil: {
+      title: "பள்ளிக்கு ஓடு!",
+      description: "பெண் பள்ளிக்கு செல்லும்போது தடைகளைத் தவிர்த்து, பள்ளி பொருட்களைச் சேகரிக்க உதவுங்கள்!",
+      controls: "கட்டுப்பாடுகள்",
+      settings: "அமைப்புகள்",
+      restart: "மீண்டும் விளையாடு",
+      quit: "விளையாட்டுகளுக்குத் திரும்பு",
+      gameOver: "விளையாட்டு முடிந்தது!",
+      finalScore: "உங்கள் இறுதி மதிப்பெண்:",
+      tryAgain: "உங்கள் உயர் மதிப்பெண்ணை வெல்ல மீண்டும் முயற்சிக்கவும்!",
+      difficultyLabel: "கடினம்",
+      soundLabel: "ஒலி",
+      languageLabel: "மொழி"
     }
-    init();
-    return () => {
-      if (renderer) renderer.dispose();
-      if (mountRef.current && mountRef.current.firstChild) mountRef.current.removeChild(mountRef.current.firstChild);
-      cancelAnimationFrame(animId);
-    };
-    // eslint-disable-next-line
-  }, []);
+  };
+  
+  // Difficulty settings
+  const difficultyOptions = {
+    english: {
+      easy: "Easy",
+      medium: "Medium",
+      hard: "Hard"
+    },
+    tamil: {
+      easy: "எளிது",
+      medium: "நடுத்தரம்",
+      hard: "கடினம்"
+    }
+  };
 
-  // Move handler
-  function move(action: string) {
-    if (gameOver) return;
-    if (action === 'left') leftRight = Math.max(-2, leftRight - 1);
-    if (action === 'right') leftRight = Math.min(2, leftRight + 1);
-    if (action === 'jump' && !jumping) { jumping = true; jumpY = 0; }
-    if (action === 'down') { /* could add duck animation */ }
-    if (action === 'run') running = true; setTimeout(() => { running = false; }, 1200);
-  }
+  // Handle game over
+  const handleGameOver = (finalScore: number) => {
+    setScore(finalScore);
+    setGameOver(true);
+  };
+
+  // Handle score updates during gameplay
+  const handleScoreUpdate = (newScore: number) => {
+    setScore(newScore);
+  };
+
+  // Reset game state
+  const resetGame = () => {
+    setGameOver(false);
+    setScore(0);
+    setGameStarted(true);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center p-4">
-      <h1 className="text-4xl font-bold text-foreground mb-4">Escape the Dog!</h1>
-      <p className="text-lg text-muted-foreground mb-2">Say: <b>left</b>, <b>right</b>, <b>jump</b>, <b>down</b>, or <b>run</b> to control the human!</p>
-      <div ref={mountRef} className="mx-auto mb-4 border-2 border-primary rounded-lg" style={{ width: 400, height: 300, background: '#e0e7ef' }} />
-      <div className="w-full max-w-md mx-auto mb-2">
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-          <div className="h-full bg-green-400 transition-all" style={{ width: `${progress * 100}%` }}></div>
+    <div className="relative min-h-[calc(100vh-9rem)] pb-16 bg-gradient-to-b from-blue-50 to-purple-50">
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <motion.h1 
+          className="text-4xl font-bold text-center mb-4 text-indigo-600"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {messages[language].title}
+        </motion.h1>
+        
+        <motion.p 
+          className="text-lg text-center text-gray-700 mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          {messages[language].description}
+        </motion.p>
+        
+        {/* Game area */}
+        <div className="relative bg-white rounded-xl shadow-lg p-4 overflow-hidden">
+          <div className="flex justify-end space-x-2 mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="flex items-center"
+            >
+              {soundEnabled ? (
+                <>
+                  <Volume2 className="h-4 w-4 mr-2" />
+                  {messages[language].soundLabel}
+                </>
+              ) : (
+                <>
+                  <VolumeX className="h-4 w-4 mr-2" />
+                  {messages[language].soundLabel}
+                </>
+              )}
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              {messages[language].settings}
+            </Button>
+          </div>
+          
+          {/* Settings panel */}
+          {showSettings && (
+            <motion.div 
+              className="mb-4 p-4 bg-gray-50 rounded-lg"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-bold mb-3">{messages[language].settings}</h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium mb-2">{messages[language].difficultyLabel}</h4>
+                  <div className="flex space-x-2">
+                    {(['easy', 'medium', 'hard'] as const).map((level) => (
+                      <Button
+                        key={level}
+                        variant={difficulty === level ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setDifficulty(level)}
+                      >
+                        {difficultyOptions[language][level]}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="text-sm font-medium mb-2">{messages[language].languageLabel}</h4>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant={language === 'english' ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setLanguage('english')}
+                      className="flex items-center"
+                    >
+                      <LanguagesIcon className="h-4 w-4 mr-1" />
+                      English
+                    </Button>
+                    <Button
+                      variant={language === 'tamil' ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setLanguage('tamil')}
+                      className="flex items-center"
+                    >
+                      <LanguagesIcon className="h-4 w-4 mr-1" />
+                      தமிழ்
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Game component */}
+          <div className="relative rounded-lg overflow-hidden">
+            <EndlessRunner
+              difficulty={difficulty}
+              soundEnabled={soundEnabled}
+              language={language}
+              onGameOver={handleGameOver}
+              onUpdateScore={handleScoreUpdate}
+            />
+          </div>
+          
+          {/* Score display */}
+          {gameStarted && !gameOver && (
+            <div className="mt-4 text-center">
+              <span className="text-xl font-bold">Score: {score}</span>
+            </div>
+          )}
+          
+          {/* Game over screen */}
+          {gameOver && (
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="mt-6 p-6 rounded-xl shadow-lg bg-gradient-to-r from-purple-50 to-pink-50"
+            >
+              <div className="flex justify-center mb-4">
+                <Trophy className="text-yellow-500 w-12 h-12" />
+                <h2 className="text-3xl font-bold text-purple-800 ml-2">
+                  {messages[language].gameOver}
+                </h2>
+              </div>
+              
+              <p className="mb-4 text-lg text-center">
+                {messages[language].finalScore} <span className="font-bold text-xl">{score}</span>
+              </p>
+              
+              <p className="mb-6 text-center text-gray-600">
+                {messages[language].tryAgain}
+              </p>
+              
+              <div className="flex justify-center space-x-4">
+                <Button onClick={resetGame} className="bg-indigo-600 hover:bg-indigo-700">
+                  {messages[language].restart}
+                </Button>
+                
+                <Button asChild variant="outline">
+                  <Link href="/learn/games">{messages[language].quit}</Link>
+                </Button>
+              </div>
+            </motion.div>
+          )}
         </div>
-        <div className="text-xs text-muted-foreground mt-1">Progress to Home</div>
+        
+        {/* Instructions */}
+        <div className="mt-8 bg-white rounded-lg shadow-md p-4">
+          <h2 className="text-xl font-bold mb-3 text-indigo-700">{messages[language].controls}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-indigo-50 p-3 rounded-lg">
+              <h3 className="font-bold mb-2">Keyboard:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>UP ARROW or SPACE = Jump</li>
+                <li>DOWN ARROW = Slide</li>
+              </ul>
+            </div>
+            <div className="bg-purple-50 p-3 rounded-lg">
+              <h3 className="font-bold mb-2">Touch:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Tap top half of screen = Jump</li>
+                <li>Tap bottom half of screen = Slide</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="text-md font-semibold mt-2">Heard: <span className="text-primary">{heard}</span></div>
-      {gameOver && (
-        <div className={`text-2xl font-bold mb-4 animate-bounce ${win ? 'text-green-500' : 'text-red-500'}`}>{win ? 'You reached home! 🏠🎉' : 'The dog caught you! 🐶😱'}</div>
-      )}
-      <Button asChild className="mt-4">
-        <Link href="/learn/games">Back to Games</Link>
-      </Button>
-      <div className="pb-16 md:pb-0"></div> {/* Spacer for bottom nav */}
     </div>
   );
 } 

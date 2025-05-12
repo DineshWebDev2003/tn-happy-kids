@@ -1,9 +1,15 @@
 import FeatureCard from '@/components/shared/feature-card';
-import { GraduationCap, LibraryBig, ShieldCheck, Puzzle, Palette, Brain } from 'lucide-react';
+import { GraduationCap, LibraryBig, ShieldCheck, Puzzle, Palette, Brain, Bot } from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
   const features = [
+    {
+      title: 'Dora & Buji',
+      description: 'Learn with Dora the Robo Teacher and her friend Buji!',
+      href: '/learn/dora-game',
+      Icon: Bot, // Updated icon for Dora's game
+    },
     {
       title: 'Alphabet Fun',
       description: 'Learn your ABCs with exciting visuals and sounds!',

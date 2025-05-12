@@ -53,6 +53,7 @@ export const games: Game[] = [
   { id: '5', title: 'Pattern Pals', description: 'Complete the sequence by finding the missing pattern!', IconName: 'ListChecks', href: '/learn/games/patterns', imageHint: 'pattern sequence' },
   { id: '6', title: 'Traffic Rules', description: 'Learn and test your knowledge of traffic rules!', IconName: 'Car', href: '/learn/games/traffic', imageHint: 'traffic light and car' },
   { id: '7', title: 'Escape the Dog', description: 'Use your voice to help the human escape the dog!', IconName: 'Running', href: '/learn/games/escape', imageHint: 'human running from dog' },
+  { id: '8', title: 'Bubble Blaster IO', description: 'Control your bubble and shoot colorful enemies in this .io style game!', IconName: 'CircleDot', href: '/learn/games/io-game', imageHint: 'colorful bubbles' },
 ];
 
 export type Story = {

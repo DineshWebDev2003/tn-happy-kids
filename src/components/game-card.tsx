@@ -1,9 +1,12 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import * as LucideIcons from 'lucide-react';
 import type { Game } from '@/data/mock-data';
+import { useState } from 'react';
 
 interface GameCardProps {
   game: Game;
@@ -11,6 +14,7 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {
   const IconComponent = (LucideIcons as any)[game.IconName] || LucideIcons.Gamepad2;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
@@ -23,11 +27,12 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
       <CardContent className="p-4 flex-grow">
          <div className="relative w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary/20">
           <Image
-            src={`https://picsum.photos/seed/${game.id}/200/120`}
+            src={imgError ? `https://picsum.photos/seed/${game.id}/200/120` : `/game-thumbnails/${game.id}.jpg`}
             alt={game.title}
             layout="fill"
             objectFit="cover"
             data-ai-hint={game.imageHint}
+            onError={() => setImgError(true)}
           />
         </div>
         <CardDescription className="text-sm text-muted-foreground">{game.description}</CardDescription>
