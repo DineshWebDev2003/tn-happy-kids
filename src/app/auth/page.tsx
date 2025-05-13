@@ -98,21 +98,21 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-lg flex flex-col items-center">
-      <h2 className="text-2xl font-bold mb-4">Login / Register</h2>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
+    <div className="w-full max-w-md mx-auto mt-4 sm:mt-12 p-4 sm:p-6 bg-white rounded-xl shadow-lg flex flex-col items-center">
+      <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Login / Register</h2>
+      {error && <div className="text-red-500 mb-2 text-sm sm:text-base">{error}</div>}
       {!user ? (
         <>
           <button
             onClick={handleGoogle}
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg mb-4 hover:bg-blue-600"
+            className="w-full py-1.5 sm:py-2 px-3 sm:px-4 bg-blue-500 text-white text-sm sm:text-base rounded-lg mb-3 sm:mb-4 hover:bg-blue-600"
             disabled={loading}
           >
             {loading ? "Loading..." : "Sign in with Google"}
           </button>
-          <div className="w-full flex items-center my-4">
+          <div className="w-full flex items-center my-3 sm:my-4">
             <div className="flex-grow border-t border-gray-300"></div>
-            <span className="mx-2 text-gray-400">or</span>
+            <span className="mx-2 text-gray-400 text-sm">or</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
           <input
@@ -120,7 +120,7 @@ export default function AuthPage() {
             placeholder="Phone number"
             value={phone}
             onChange={e => setPhone(e.target.value)}
-            className="w-full mb-2 px-3 py-2 border rounded"
+            className="w-full mb-2 px-3 py-1.5 sm:py-2 text-sm sm:text-base border rounded"
           />
           {confirmation ? (
             <>
@@ -129,11 +129,11 @@ export default function AuthPage() {
                 placeholder="Enter OTP"
                 value={otp}
                 onChange={e => setOtp(e.target.value)}
-                className="w-full mb-2 px-3 py-2 border rounded"
+                className="w-full mb-2 px-3 py-1.5 sm:py-2 text-sm sm:text-base border rounded"
               />
               <button
                 onClick={handleOtp}
-                className="w-full py-2 px-4 bg-green-500 text-white rounded-lg mb-4 hover:bg-green-600"
+                className="w-full py-1.5 sm:py-2 px-3 sm:px-4 bg-green-500 text-white text-sm sm:text-base rounded-lg mb-3 sm:mb-4 hover:bg-green-600"
                 disabled={loading}
               >
                 {loading ? "Verifying..." : "Verify OTP"}
@@ -142,7 +142,7 @@ export default function AuthPage() {
           ) : (
             <button
               onClick={handlePhone}
-              className="w-full py-2 px-4 bg-green-500 text-white rounded-lg mb-4 hover:bg-green-600"
+              className="w-full py-1.5 sm:py-2 px-3 sm:px-4 bg-green-500 text-white text-sm sm:text-base rounded-lg mb-3 sm:mb-4 hover:bg-green-600"
               disabled={loading}
             >
               {loading ? "Sending..." : "Sign in with Phone"}
@@ -155,9 +155,9 @@ export default function AuthPage() {
           <img
             src={profilePic || user?.photoURL || "/default-avatar.png"}
             alt="Profile"
-            className="w-24 h-24 rounded-full object-cover mb-2 border-2 border-primary"
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mb-2 border-2 border-primary"
           />
-          <label className="mb-2 cursor-pointer text-blue-600 hover:underline">
+          <label className="mb-2 cursor-pointer text-blue-600 hover:underline text-sm sm:text-base">
             Change Profile Picture
             <input
               type="file"
@@ -166,11 +166,11 @@ export default function AuthPage() {
               onChange={handleProfilePicChange}
             />
           </label>
-          <div className="text-lg font-semibold mb-1">{user?.displayName || user?.phoneNumber || user?.email}</div>
-          <div className="text-gray-500 mb-2">{user?.email}</div>
+          <div className="text-base sm:text-lg font-semibold mb-1 text-center">{user?.displayName || user?.phoneNumber || user?.email}</div>
+          <div className="text-gray-500 mb-2 text-xs sm:text-sm text-center">{user?.email}</div>
           <button
             onClick={handleSignOut}
-            className="mt-2 py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600"
+            className="mt-2 py-1.5 sm:py-2 px-3 sm:px-4 bg-red-500 text-white text-sm sm:text-base rounded-lg hover:bg-red-600"
           >
             Sign Out
           </button>

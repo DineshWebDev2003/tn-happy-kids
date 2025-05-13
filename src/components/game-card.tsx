@@ -18,14 +18,14 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
 
   return (
     <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
-      <CardHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <IconComponent className="w-8 h-8 text-accent" />
-          <CardTitle className="text-xl font-semibold text-primary">{game.title}</CardTitle>
+      <CardHeader className="p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-accent shrink-0" />
+          <CardTitle className="text-base sm:text-xl font-semibold text-primary">{game.title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="p-4 flex-grow">
-         <div className="relative w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary/20">
+      <CardContent className="p-3 sm:p-4 flex-grow">
+         <div className="relative w-full h-24 sm:h-32 mb-2 sm:mb-3 rounded-md overflow-hidden bg-secondary/20">
           <Image
             src={imgError ? `https://picsum.photos/seed/${game.id}/200/120` : `/game-thumbnails/${game.id}.jpg`}
             alt={game.title}
@@ -35,12 +35,12 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
             onError={() => setImgError(true)}
           />
         </div>
-        <CardDescription className="text-sm text-muted-foreground">{game.description}</CardDescription>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">{game.description}</CardDescription>
       </CardContent>
-      <CardFooter className="p-4">
+      <CardFooter className="p-3 sm:p-4">
         <Link href={game.href} passHref className="w-full">
-          <Button variant="secondary" className="w-full">
-            Play Now <LucideIcons.Play className="ml-2 h-4 w-4" />
+          <Button variant="secondary" className="w-full text-xs sm:text-sm h-8 sm:h-10">
+            Play Now <LucideIcons.Play className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </Link>
       </CardFooter>

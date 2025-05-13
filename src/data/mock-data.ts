@@ -52,7 +52,6 @@ export const games: Game[] = [
   { id: '4', title: 'Memory Masters', description: 'Boost your memory with exciting challenges.', IconName: 'Brain', href: '/learn/games/memory', imageHint: 'brain puzzle' },
   { id: '5', title: 'Pattern Pals', description: 'Complete the sequence by finding the missing pattern!', IconName: 'ListChecks', href: '/learn/games/patterns', imageHint: 'pattern sequence' },
   { id: '6', title: 'Traffic Rules', description: 'Learn and test your knowledge of traffic rules!', IconName: 'Car', href: '/learn/games/traffic', imageHint: 'traffic light and car' },
-  { id: '7', title: 'Escape the Dog', description: 'Use your voice to help the human escape the dog!', IconName: 'Running', href: '/learn/games/escape', imageHint: 'human running from dog' },
   { id: '8', title: 'Bubble Blaster IO', description: 'Control your bubble and shoot colorful enemies in this .io style game!', IconName: 'CircleDot', href: '/learn/games/io-game', imageHint: 'colorful bubbles' },
 ];
 
@@ -138,7 +137,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'professions',
     title: 'Profession Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1BzvvYvw9JbH6uGtsGZgCqKYIj4cpArQu/preview',
-    thumbnailUrl: '/thumbnails/professions.jpg',
+    thumbnailUrl: '/video-lessons/Profession Names for kids.png',
     category: 'Careers',
     description: 'Discover different professions and what they do!'
   },
@@ -146,7 +145,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'numbers',
     title: 'Numbers for Kids',
     videoUrl: 'https://drive.google.com/file/d/1k_c7KtAx0D1570SLfuBHhJ2oq9mNNP82/preview',
-    thumbnailUrl: '/thumbnails/numbers.jpg',
+    thumbnailUrl: '/video-lessons/Numbers for kids.png',
     category: 'Math',
     description: 'Count and learn numbers in a fun way!'
   },
@@ -154,7 +153,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'fruits',
     title: 'Fruits Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1WId_Oq5-XfiRcs-7hbl4XPv3TYP44bRR/preview',
-    thumbnailUrl: '/thumbnails/fruits.jpg',
+    thumbnailUrl: '/video-lessons/fruits names for kids.png',
     category: 'Food',
     description: 'Learn about different fruits and their names!'
   },
@@ -162,7 +161,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'colors',
     title: 'Colours For Kids',
     videoUrl: 'https://drive.google.com/file/d/1jLJIYul5CTvZK8aT8wBNuUOFCz-subT9/preview',
-    thumbnailUrl: '/thumbnails/colors.jpg',
+    thumbnailUrl: '/video-lessons/colours for kids.png',
     category: 'Colors',
     description: 'Explore the wonderful world of colors!'
   },
@@ -170,7 +169,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'animals',
     title: 'Animal Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1GKfhSnT_vWMapzefZx46sHQgwtpcyloS/preview',
-    thumbnailUrl: '/thumbnails/animals.jpg',
+    thumbnailUrl: '/video-lessons/animal names for kids.png',
     category: 'Animals',
     description: 'Discover different animals and their names!'
   },
@@ -178,7 +177,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'alphabets',
     title: 'Alphabets for Kids',
     videoUrl: 'https://drive.google.com/file/d/1PbSh_h1fJB-PUYRad0RBJNgXVZrsc3oH/preview',
-    thumbnailUrl: '/thumbnails/alphabets.jpg',
+    thumbnailUrl: '/video-lessons/alphabets for kids.png',
     category: 'Language',
     description: 'Learn the alphabet with fun animations and sounds!'
   },
@@ -186,7 +185,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'body-parts',
     title: 'Body Parts Names For Kids',
     videoUrl: 'https://drive.google.com/file/d/1TNGONqC5Tbv0S7iXQtINWIwLHt8hV4BT/view?usp=sharing',
-    thumbnailUrl: '/thumbnails/body-parts.jpg',
+    thumbnailUrl: '/video-lessons/body parts names for kids.png',
     category: 'Body',
     description: 'Learn about different parts of the body!'
   },
@@ -194,7 +193,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'relationships',
     title: 'Relationships Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1Nj2x6APd_DFKQSmua-ptE4o-z0EOLSvV/preview',
-    thumbnailUrl: '/thumbnails/relationships.jpg',
+    thumbnailUrl: '/video-lessons/relationships.png',
     category: 'Family',
     description: 'Learn about family relationships and names!'
   },
@@ -202,7 +201,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'shapes',
     title: 'Shapes for Kids',
     videoUrl: 'https://drive.google.com/file/d/1QMYVE0-oQBZgVC8cvRrU1yg3atj3WobW/preview',
-    thumbnailUrl: '/thumbnails/shapes.jpg',
+    thumbnailUrl: '/video-lessons/shapes for kids.png',
     category: 'Math',
     description: 'Explore different shapes and their properties!'
   },
@@ -210,7 +209,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'sports',
     title: 'Sports Names For Kids',
     videoUrl: 'https://drive.google.com/file/d/1rcafYWFhELOZXyTVP5OJU07Cn5RKW_G4/preview',
-    thumbnailUrl: '/thumbnails/sports.jpg',
+    thumbnailUrl: '/video-lessons/sports names for kids.png',
     category: 'Sports',
     description: 'Learn about different sports and activities!'
   },
@@ -218,7 +217,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'stationary',
     title: 'Stationary Items for Kids',
     videoUrl: 'https://drive.google.com/file/d/1bd3IrFj0-2UarfFHZD90gIKoWg-z2AFi/preview',
-    thumbnailUrl: '/thumbnails/stationary.jpg',
+    thumbnailUrl: '/video-lessons/stationary itemes for kids.png',
     category: 'School',
     description: 'Discover different school supplies and their uses!'
   },
@@ -226,7 +225,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'things',
     title: 'Things Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1GQPXaqBOhx3cF6FxQlPXVJ6mR6e4b8eu/preview',
-    thumbnailUrl: '/thumbnails/things.jpg',
+    thumbnailUrl: '/video-lessons/objects names.png',
     category: 'Objects',
     description: 'Learn about everyday objects and their names!'
   },
@@ -234,7 +233,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'vegetables',
     title: 'Vegetables Names for Kids',
     videoUrl: 'https://drive.google.com/file/d/1giTyahbq7leWFbQF5vxPS92lqwIGKObN/preview',
-    thumbnailUrl: '/thumbnails/vegetables.jpg',
+    thumbnailUrl: '/video-lessons/vegitable names.png',
     category: 'Food',
     description: 'Explore different vegetables and their names!'
   },
@@ -242,7 +241,7 @@ export const videoLessons: VideoLesson[] = [
     id: 'vehicles',
     title: 'Vehicles Names',
     videoUrl: 'https://drive.google.com/file/d/10GnaOS3iYoviEoYncCyog1C1ExDhTbsn/preview',
-    thumbnailUrl: '/thumbnails/vehicles.jpg',
+    thumbnailUrl: '/video-lessons/vehicles names.png',
     category: 'Transportation',
     description: 'Learn about different vehicles and their uses!'
   }

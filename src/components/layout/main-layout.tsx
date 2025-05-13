@@ -11,7 +11,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <AppHeader />
-      <main className="flex-grow container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <main className="flex-grow container mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:px-8 overflow-x-hidden max-w-full">
         {children}
       </main>
       <BottomNav />

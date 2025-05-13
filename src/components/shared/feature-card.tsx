@@ -17,17 +17,17 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, href, Icon, ctaText = "Let's Go!", className }) => {
   return (
     <Card className={cn("shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full", className)}>
-      <CardHeader className="flex flex-row items-center gap-4 pb-2">
-        <Icon className="w-10 h-10 text-accent" />
-        <CardTitle className="text-xl font-semibold">{title}</CardTitle>
+      <CardHeader className="flex flex-row items-center gap-2 sm:gap-4 py-3 px-3 sm:px-4 sm:pb-2">
+        <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-accent shrink-0" />
+        <CardTitle className="text-lg sm:text-xl font-semibold">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <CardDescription className="text-sm">{description}</CardDescription>
+      <CardContent className="flex-grow py-1 px-3 sm:px-4">
+        <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>
       </CardContent>
-      <CardContent className="pt-0"> {/* ShadCN CardFooter usually handles actions, using CardContent here for the button */}
+      <CardContent className="pt-1 pb-3 px-3 sm:px-4"> 
         <Link href={href} passHref>
-          <Button variant="default" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-            {ctaText} <ArrowRight className="ml-2 h-4 w-4" />
+          <Button variant="default" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm h-8 sm:h-10">
+            {ctaText} <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </Link>
       </CardContent>

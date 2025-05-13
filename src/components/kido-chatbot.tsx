@@ -133,7 +133,7 @@ export default function KidoChatbot() {
       {/* Floating Icon Button */}
       {!open && (
         <button
-          className="fixed bottom-8 right-8 z-50 w-16 h-16 rounded-full shadow-lg bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center border-4 border-white hover:scale-105 transition-transform"
+          className="fixed bottom-20 md:bottom-8 right-8 z-50 w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center border-4 border-white hover:scale-105 transition-transform"
           onClick={() => setOpen(true)}
           aria-label="Open Kido Chatbot"
         >
@@ -141,29 +141,36 @@ export default function KidoChatbot() {
             <img
               src={kidoAvatar}
               alt="Kido"
-              className="w-12 h-12 rounded-full"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full"
               onError={() => setShowBotIcon(true)}
             />
           ) : (
-            <Bot className="w-10 h-10 text-green-700" />
+            <Bot className="w-8 h-8 md:w-10 md:h-10 text-green-700" />
           )}
         </button>
       )}
 
       {/* Chatbot Window */}
       {open && (
-        <div className="fixed bottom-8 right-8 z-50 w-80 max-w-full rounded-2xl shadow-2xl bg-gradient-to-br from-green-100 to-blue-100 border border-green-200 animate-fade-in">
+        <div className="fixed bottom-20 md:bottom-8 right-8 z-50 w-80 max-w-full rounded-2xl shadow-2xl bg-gradient-to-br from-green-100 to-blue-100 border border-green-200 animate-fade-in">
           <div className="flex items-center gap-2 p-3 border-b border-green-200 relative">
             <img src={kidoAvatar} alt="Kido" className="w-10 h-10 rounded-full border-2 border-white" />
             <span className="font-bold text-lg text-green-800">Kido (AI)</span>
-            <Volume2 className={`ml-auto ${speaking ? "animate-pulse text-green-500" : "text-green-300"}`} />
-            <button
-              className="absolute top-2 right-2 p-1 rounded-full hover:bg-green-200"
-              onClick={() => setOpen(false)}
-              aria-label="Close Kido Chatbot"
-            >
-              <X className="w-5 h-5 text-green-700" />
-            </button>
+            <div className="ml-auto flex items-center gap-3">
+              <button 
+                className={`p-1 rounded-full hover:bg-green-200`}
+                title="Audio"
+              >
+                <Volume2 className={`w-5 h-5 ${speaking ? "animate-pulse text-green-500" : "text-green-300"}`} />
+              </button>
+              <button
+                className="p-1 rounded-full hover:bg-green-200"
+                onClick={() => setOpen(false)}
+                aria-label="Close Kido Chatbot"
+              >
+                <X className="w-5 h-5 text-green-700" />
+              </button>
+            </div>
           </div>
           <div className="p-3 space-y-2 min-h-[80px] max-h-64 overflow-y-auto">
             {messages.map((msg, i) => (

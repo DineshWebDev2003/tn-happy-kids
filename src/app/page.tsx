@@ -43,11 +43,11 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-12">
-      <section className="text-center py-8 bg-gradient-to-r from-primary via-yellow-300 to-secondary rounded-xl shadow-lg">
-        <div className="relative w-40 h-40 mx-auto mb-4">
+    <div className="space-y-6 sm:space-y-12">
+      <section className="text-center py-6 sm:py-8 bg-gradient-to-r from-primary via-yellow-300 to-secondary rounded-xl shadow-lg">
+        <div className="relative w-28 h-28 sm:w-40 sm:h-40 mx-auto mb-3 sm:mb-4">
            <Image 
-            src="/images/kido-avatar.jpg" // Updated path
+            src="/images/kido-avatar.jpg"
             alt="Kido Bot" 
             layout="fill"
             objectFit="cover"
@@ -55,15 +55,15 @@ export default function HomePage() {
             data-ai-hint="kido bot"
           />
         </div>
-        <h2 className="text-4xl font-bold text-primary-foreground mb-2">Welcome to HappyKids Learn!</h2>
-        <p className="text-lg text-primary-foreground/90">
+        <h2 className="text-2xl sm:text-4xl font-bold text-primary-foreground mb-1 sm:mb-2 px-4">Welcome to HappyKids Learn!</h2>
+        <p className="text-base sm:text-lg text-primary-foreground/90 px-4">
           Your adventure in learning starts here. Explore, play, and grow!
         </p>
       </section>
 
       <section>
-        <h3 className="text-3xl font-semibold text-center mb-8 text-foreground">Discover Our Fun Activities</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h3 className="text-xl sm:text-3xl font-semibold text-center mb-4 sm:mb-8 text-foreground px-2">Discover Our Fun Activities</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature) => (
             <FeatureCard
               key={feature.title}
