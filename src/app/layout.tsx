@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'; // Using Inter for a slightly more chi
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import MainLayout from '@/components/layout/main-layout';
-import Head from 'next/head';
+import logoPath from '@/logo.png';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -11,9 +11,17 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'HappyKids Learn - Fun Learning Platform for Kids',
-  description: 'HappyKids Learn offers interactive alphabet learning, safety education, educational games, audio stories, and AI-powered quizzes for children.',
+  title: 'TN HappyKids Learn - Fun Learning Platform for Kids',
+  description: 'TN HappyKids Learn offers interactive alphabet learning, safety education, educational games, audio stories, and AI-powered quizzes for children.',
   viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+  icons: {
+    icon: [
+      { url: logoPath.src, sizes: 'any' }
+    ],
+    apple: [
+      { url: logoPath.src, sizes: 'any' }
+    ]
+  }
 };
 
 export default function RootLayout({
@@ -23,10 +31,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <Head>
-        <link rel="icon" href="/favicon.png" type="image/png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </Head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <MainLayout>
           {children}

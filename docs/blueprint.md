@@ -1,4 +1,4 @@
-# **App Name**: HappyKids Learn
+# **App Name**: TN HappyKids Learn
 
 ## Core Features:
 

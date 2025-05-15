@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, GraduationCap, LibraryBig, ShieldCheck, Puzzle } from 'lucide-react';
+import { Home, GraduationCap, LibraryBig, ShieldCheck, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { href: '/learn', label: 'Learn', icon: GraduationCap },
   { href: '/stories', label: 'Stories', icon: LibraryBig },
   { href: '/safety', label: 'Safety', icon: ShieldCheck },
-  { href: '/quiz', label: 'Quiz', icon: Puzzle },
+  { href: '/conversation', label: 'Conversation', icon: MessageSquare },
 ];
 
 const BottomNav = () => {

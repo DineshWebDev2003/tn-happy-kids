@@ -1,10 +1,8 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// For debugging - logging the environment variables
-console.log("API KEY:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-console.log("AUTH DOMAIN:", process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN);
-
+// Firebase configuration - hardcoded for client-side usage
+// For better security in production, consider using Firebase Auth Emulator or Firebase Admin SDK
 const firebaseConfig = {
   apiKey: "AIzaSyC7f6VAN2nl2ocobYRSnlCCwPvTcwuGaOI",
   authDomain: "learning-e5a5d.firebaseapp.com",

@@ -1,5 +1,5 @@
 import FeatureCard from '@/components/shared/feature-card';
-import { GraduationCap, LibraryBig, ShieldCheck, Puzzle, Palette, Brain, Bot } from 'lucide-react';
+import { GraduationCap, LibraryBig, ShieldCheck, Puzzle, Palette, Brain, Bot, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -21,6 +21,12 @@ export default function HomePage() {
       description: 'Play fun games to learn numbers, shapes, and more!',
       href: '/learn/games',
       Icon: Brain, // Represents thinking/memory games
+    },
+    {
+      title: 'Conversation Bubbles',
+      description: 'Practice talking with doctors, teachers, and more!',
+      href: '/conversation/illustration-demo',
+      Icon: MessageCircle, // Represents conversations
     },
     {
       title: 'Story Time',
@@ -55,7 +61,7 @@ export default function HomePage() {
             data-ai-hint="kido bot"
           />
         </div>
-        <h2 className="text-2xl sm:text-4xl font-bold text-primary-foreground mb-1 sm:mb-2 px-4">Welcome to HappyKids Learn!</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-primary-foreground mb-1 sm:mb-2 px-4">Welcome to TN HappyKids Learn!</h2>
         <p className="text-base sm:text-lg text-primary-foreground/90 px-4">
           Your adventure in learning starts here. Explore, play, and grow!
         </p>

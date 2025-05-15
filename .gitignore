@@ -40,6 +40,9 @@ next-env.d.ts
 .genkit/*
 .env*
 
+# API keys and configuration
+server-setup.js
+
 # firebase
 firebase-debug.log
 firestore-debug.log
