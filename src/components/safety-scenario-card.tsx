@@ -1,13 +1,30 @@
+"use client";
+
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
 import type { SafetyScenario } from '@/data/mock-data';
+import { useState } from 'react';
 
 interface SafetyScenarioCardProps {
   scenarioItem: SafetyScenario;
 }
 
 const SafetyScenarioCard: React.FC<SafetyScenarioCardProps> = ({ scenarioItem }) => {
+  // Convert png urls to jpg if needed
+  const [imgSrc, setImgSrc] = useState<string>(scenarioItem.imageUrl);
+  
+  // Handle image error (if PNG doesn't exist, try JPG)
+  const handleImageError = () => {
+    if (imgSrc.endsWith('.png')) {
+      const jpgUrl = imgSrc.replace('.png', '.jpg');
+      setImgSrc(jpgUrl);
+    } else {
+      // If JPG also fails, use placeholder
+      setImgSrc(`https://picsum.photos/seed/${scenarioItem.id}/300/150`);
+    }
+  };
+
   return (
     <Card className="shadow-md hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="p-4">
@@ -26,11 +43,12 @@ const SafetyScenarioCard: React.FC<SafetyScenarioCardProps> = ({ scenarioItem })
       <CardContent className="p-4 pt-0">
         <div className="relative w-full h-40 mb-3 rounded-md overflow-hidden bg-secondary/20">
           <Image
-            src={`https://picsum.photos/seed/${scenarioItem.id}/300/150`}
+            src={imgSrc}
             alt={scenarioItem.title}
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             data-ai-hint={scenarioItem.imageHint}
+            onError={handleImageError}
           />
         </div>
         <p className={`text-sm p-3 rounded-md ${scenarioItem.isGoodTouch ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>

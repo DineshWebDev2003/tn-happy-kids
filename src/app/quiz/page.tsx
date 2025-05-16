@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import QuizGeneratorClient from './quiz-generator-client';
 
 export default function QuizPage() {
-  redirect('/conversation');
+  return <QuizGeneratorClient />;
 }

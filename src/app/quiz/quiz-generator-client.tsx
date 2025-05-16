@@ -15,6 +15,7 @@ import QuizDisplay from '@/components/quiz/quiz-display';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useSearchParams } from 'next/navigation';
+import { videoLessons, type VideoLesson } from '@/data/mock-data';
 
 const quizFormSchema = z.object({
   storyContent: z.string().min(50, { message: 'Story content must be at least 50 characters long.' }).max(5000, { message: "Story content cannot exceed 5000 characters."}),
