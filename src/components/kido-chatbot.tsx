@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Volume2, Mic, Send, X, Bot } from "lucide-react";
 
@@ -77,8 +77,37 @@ export default function KidoChatbot() {
   const [speaking, setSpeaking] = useState(false);
   const [open, setOpen] = useState(false);
   const [showBotIcon, setShowBotIcon] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const recognitionRef = useRef<any>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+
+  // Load saved position from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedPosition = localStorage.getItem('kidoChatbotPosition');
+        if (savedPosition) {
+          setButtonPosition(JSON.parse(savedPosition));
+        }
+      } catch (error) {
+        console.error('Error loading chatbot position:', error);
+      }
+    }
+  }, []);
+
+  // Save position to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (buttonPosition.x !== 0 || buttonPosition.y !== 0)) {
+      try {
+        localStorage.setItem('kidoChatbotPosition', JSON.stringify(buttonPosition));
+      } catch (error) {
+        console.error('Error saving chatbot position:', error);
+      }
+    }
+  }, [buttonPosition]);
 
   // Text-to-speech
   const speak = (text: string) => {
@@ -207,14 +236,147 @@ export default function KidoChatbot() {
     speak(reply);
   };
 
+  // Handle mouse/touch down events to start dragging
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (open) return; // Don't allow dragging when chat is open
+    
+    setIsDragging(true);
+    
+    // Get current position based on touch or mouse event
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    setDragStart({
+      x: clientX - buttonPosition.x,
+      y: clientY - buttonPosition.y
+    });
+    
+    // Prevent default behavior to avoid text selection, etc.
+    e.preventDefault();
+  };
+
+  // Handle mouse/touch up events to stop dragging
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Handle mouse/touch move events for dragging
+  const handleDragMove = (e: MouseEvent | TouchEvent) => {
+    if (!isDragging) return;
+    
+    // Get current position based on touch or mouse event
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    // Calculate new position
+    const newX = clientX - dragStart.x;
+    const newY = clientY - dragStart.y;
+    
+    // Add boundary checks to keep button within viewport
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const buttonWidth = buttonRef.current?.offsetWidth || 64;
+    const buttonHeight = buttonRef.current?.offsetHeight || 64;
+    
+    // Ensure button stays within viewport boundaries
+    const boundedX = Math.min(Math.max(0, newX), windowWidth - buttonWidth);
+    const boundedY = Math.min(Math.max(0, newY), windowHeight - buttonHeight);
+    
+    // Update position state with bounded values
+    setButtonPosition({ x: boundedX, y: boundedY });
+    
+    e.preventDefault();
+  };
+
+  // Add event listeners for drag events when component mounts
+  useEffect(() => {
+    if (!isDragging) return;
+    
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+      
+      const newX = clientX - dragStart.x;
+      const newY = clientY - dragStart.y;
+      
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const buttonWidth = buttonRef.current?.offsetWidth || 64;
+      const buttonHeight = buttonRef.current?.offsetHeight || 64;
+      
+      const boundedX = Math.min(Math.max(0, newX), windowWidth - buttonWidth);
+      const boundedY = Math.min(Math.max(0, newY), windowHeight - buttonHeight);
+      
+      setButtonPosition({ x: boundedX, y: boundedY });
+      
+      e.preventDefault();
+    };
+    
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !e.touches[0]) return;
+      
+      const clientX = e.touches[0].clientX;
+      const clientY = e.touches[0].clientY;
+      
+      const newX = clientX - dragStart.x;
+      const newY = clientY - dragStart.y;
+      
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const buttonWidth = buttonRef.current?.offsetWidth || 64;
+      const buttonHeight = buttonRef.current?.offsetHeight || 64;
+      
+      const boundedX = Math.min(Math.max(0, newX), windowWidth - buttonWidth);
+      const boundedY = Math.min(Math.max(0, newY), windowHeight - buttonHeight);
+      
+      setButtonPosition({ x: boundedX, y: boundedY });
+      
+      e.preventDefault();
+    };
+    
+    const onDragEnd = () => {
+      setIsDragging(false);
+    };
+    
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onDragEnd);
+    document.addEventListener('touchmove', onTouchMove);
+    document.addEventListener('touchend', onDragEnd);
+    
+    // Clean up event listeners when component unmounts
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onDragEnd);
+    };
+  }, [isDragging, dragStart]);
+
   return (
     <>
       {/* Floating Icon Button */}
       {!open && (
         <button
-          className="fixed bottom-20 md:bottom-8 right-8 z-50 w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center border-4 border-white hover:scale-105 transition-transform"
-          onClick={() => setOpen(true)}
+          ref={buttonRef}
+          className={`fixed z-50 w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center border-4 hover:scale-105 transition-transform ${isDragging ? 'border-green-400 scale-110' : 'border-white'}`}
+          onClick={() => !isDragging && setOpen(true)}
+          onMouseDown={handleDragStart}
+          onTouchStart={handleDragStart}
           aria-label="Open Kido Chatbot"
+          style={{
+            bottom: `${buttonPosition.y === 0 ? '20px' : 'auto'}`,
+            right: `${buttonPosition.x === 0 ? '32px' : 'auto'}`,
+            top: buttonPosition.y === 0 ? 'auto' : `${buttonPosition.y}px`,
+            left: buttonPosition.x === 0 ? 'auto' : `${buttonPosition.x}px`,
+            cursor: isDragging ? 'grabbing' : 'grab',
+            touchAction: 'none',
+            transform: isDragging ? 'scale(1.1)' : 'scale(1)',
+            opacity: isDragging ? 0.8 : 1,
+            transition: isDragging ? 'none' : 'all 0.2s ease'
+          }}
         >
           {!showBotIcon ? (
             <img
@@ -222,16 +384,50 @@ export default function KidoChatbot() {
               alt="Kido"
               className="w-10 h-10 md:w-12 md:h-12 rounded-full"
               onError={() => setShowBotIcon(true)}
+              draggable="false"
             />
           ) : (
             <Bot className="w-8 h-8 md:w-10 md:h-10 text-green-700" />
           )}
+          {isDragging && (
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-green-700 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+              Dragging...
+            </span>
+          )}
+        </button>
+      )}
+
+      {/* Reset position button - only shows when button has been moved */}
+      {!open && (buttonPosition.x !== 0 || buttonPosition.y !== 0) && (
+        <button
+          className="fixed bottom-4 right-4 z-40 bg-white/90 hover:bg-white text-xs text-green-800 rounded-full px-2 py-1 shadow-md border border-green-200 flex items-center gap-1"
+          onClick={() => {
+            setButtonPosition({ x: 0, y: 0 });
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('kidoChatbotPosition');
+            }
+          }}
+          aria-label="Reset chatbot position"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          Reset
         </button>
       )}
 
       {/* Chatbot Window */}
       {open && (
-        <div className="fixed bottom-20 md:bottom-8 right-8 z-50 w-80 max-w-full rounded-2xl shadow-2xl bg-gradient-to-br from-green-100 to-blue-100 border border-green-200 animate-fade-in">
+        <div 
+          className="fixed z-50 w-80 max-w-full rounded-2xl shadow-2xl bg-gradient-to-br from-green-100 to-blue-100 border border-green-200 animate-fade-in"
+          style={{
+            bottom: `${buttonPosition.y === 0 ? '20px' : 'auto'}`,
+            right: `${buttonPosition.x === 0 ? '32px' : 'auto'}`,
+            top: buttonPosition.y === 0 ? 'auto' : `${buttonPosition.y}px`,
+            left: buttonPosition.x === 0 ? 'auto' : `${buttonPosition.x}px`,
+          }}
+        >
           <div className="flex items-center gap-2 p-3 border-b border-green-200 relative">
             <img src={kidoAvatar} alt="Kido" className="w-10 h-10 rounded-full border-2 border-white" />
             <span className="font-bold text-lg text-green-800">Kido (AI)</span>

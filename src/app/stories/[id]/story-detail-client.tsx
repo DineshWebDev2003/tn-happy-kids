@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { BookOpen, ChevronLeft, Globe, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronLeft, Globe, ChevronRight, Tag } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 import type { Story } from '@/data/mock-data';
 
 // Define the scene structure for stories with custom scenes
@@ -36,8 +37,10 @@ export default function StoryDetailClient({ story }: StoryDetailClientProps) {
   useEffect(() => {
     if (!story) {
       toast({
-        title: "Story Not Found",
-        description: "The story you're looking for couldn't be found.",
+        title: language === 'english' ? "Story Not Found" : "கதை கிடைக்கவில்லை",
+        description: language === 'english' 
+          ? "The story you're looking for couldn't be found." 
+          : "நீங்கள் தேடும் கதையைக் கண்டுபிடிக்க முடியவில்லை.",
         variant: "destructive",
       });
       router.push('/stories');
@@ -112,6 +115,14 @@ export default function StoryDetailClient({ story }: StoryDetailClientProps) {
         });
       }
       
+      // Ensure we have at least one page to prevent undefined scene
+      if (pages.length === 0) {
+        pages.push({
+          content: language === 'english' ? "Story content not available." : "கதை உள்ளடக்கம் கிடைக்கவில்லை.",
+          imageUrl: story.imageUrl
+        });
+      }
+      
       setStoryPages(pages);
     }
     
@@ -130,8 +141,10 @@ export default function StoryDetailClient({ story }: StoryDetailClientProps) {
         }
       } catch (error) {
         toast({
-          title: "Error",
-          description: "Could not prepare story for quiz. Please try again.",
+          title: language === 'english' ? "Error" : "பிழை",
+          description: language === 'english'
+            ? "Could not prepare story for quiz. Please try again."
+            : "விளக்கக்காட்சிக்காக கதையைத் தயாரிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
           variant: "destructive",
         });
       }
@@ -216,18 +229,48 @@ export default function StoryDetailClient({ story }: StoryDetailClientProps) {
   };
 
   if (!story) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <div className="text-center py-12">{language === 'english' ? 'Loading...' : 'ஏற்றுகிறது...'}</div>;
   }
 
   const displayTitle = language === 'english' ? story.title : (story.titleTamil || story.title);
+  const displayExcerpt = language === 'english' ? story.excerpt : (story.excerptTamil || story.excerpt);
   const currentScene = storyPages[currentPage];
   
   // Determine content based on language
-  const getSceneContent = (scene: StoryScene) => {
+  const getSceneContent = (scene: StoryScene | undefined) => {
+    if (!scene) return '';
     if (language === 'tamil' && scene.contentTamil) {
       return scene.contentTamil;
     }
     return scene.content;
+  };
+
+  // Get scene caption based on language
+  const getSceneCaption = (scene: StoryScene | undefined) => {
+    if (!scene) return '';
+    if (language === 'tamil' && scene.captionTamil) {
+      return scene.captionTamil;
+    }
+    return scene.caption;
+  };
+
+  // Categories translation for Tamil
+  const getCategoryTranslation = (category: string): string => {
+    const translations: Record<string, string> = {
+      'Honesty': 'நேர்மை',
+      'Kindness': 'கருணை',
+      'Wisdom': 'ஞானம்',
+      'Friendship': 'நட்பு',
+      'Perseverance': 'விடாமுயற்சி',
+      'Sharing': 'பகிர்தல்',
+      'Gratitude': 'நன்றி',
+      'Respect': 'மரியாதை',
+      'Humility': 'பணிவு',
+      'Courage': 'தைரியம்',
+      'Responsibility': 'பொறுப்புணர்வு'
+    };
+    
+    return translations[category] || category;
   };
 
   return (
@@ -248,166 +291,134 @@ export default function StoryDetailClient({ story }: StoryDetailClientProps) {
             className="flex-1 sm:flex-auto items-center"
           >
             <Globe className="mr-2 h-4 w-4" /> 
-            {language === 'english' ? 'தமிழ்' : 'English'}
+            {language === 'english' ? 'தமிழில் படிக்க' : 'Read in English'}
+          </Button>
+          <Button 
+            variant="default" 
+            onClick={handleGenerateQuiz}
+            className="flex-1 sm:flex-auto"
+          >
+            <BookOpen className="mr-2 h-4 w-4" /> {language === 'english' ? 'Take Quiz' : 'வினாடி வினா'}
           </Button>
         </div>
       </div>
-
-      {/* Book with Page Turning Animation */}
-      <div className="book-container">
-        <div 
-          ref={bookRef}
-          className="book"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+      
+      {/* Story Header */}
+      <div className="mb-6 text-center">
+        <Link 
+          href={`/stories/categories/${story.category.toLowerCase()}`}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-2"
         >
-          <div className="bg-card rounded-lg shadow-lg overflow-hidden mb-6">
-            {/* Header section */}
-            <div className="bg-primary/10 p-4 border-b">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-primary">{displayTitle}</h1>
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-primary/90" variant="secondary">
-                    {story.category}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-
-            {/* Page content with text overlay on image */}
-            {currentScene && currentScene.imageUrl && (
-              <div className="relative w-full h-[500px]">
-                <Image
-                  src={currentScene.imageUrl}
-                  alt={displayTitle}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  style={{objectFit: "cover"}}
-                  priority
-                />
-                
-                {/* Text overlay */}
-                <div className="absolute inset-0 bg-black/50 p-6 overflow-y-auto">
-                  <div className="prose prose-invert max-w-none">
-                    {getSceneContent(currentScene).split('\n\n').map((paragraph, idx) => (
-                      <p key={idx} className="mb-4 text-base sm:text-lg text-white">{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Page navigation controls */}
-            <div className="flex justify-between items-center p-4 bg-muted/20 border-t">
-              <Button 
-                variant="ghost" 
-                onClick={prevPage}
-                disabled={currentPage === 0 || isFlipping}
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </Button>
-              
-              <div className="text-sm text-muted-foreground">
-                {language === 'english' ? 'Page' : 'பக்கம்'} {currentPage + 1}/{storyPages.length}
-              </div>
-              
-              <Button 
-                variant="ghost" 
-                onClick={nextPage}
-                disabled={currentPage === storyPages.length - 1 || isFlipping}
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Thumbnails for navigation */}
-        <div className="mt-4 mb-6">
-          <div className="overflow-x-auto pb-2">
-            <div className="flex space-x-2">
-              {storyPages.map((scene, index) => (
-                <div 
-                  key={index} 
-                  className={`relative cursor-pointer transition-all ${
-                    currentPage === index 
-                      ? 'ring-4 ring-primary scale-105' 
-                      : 'ring-2 ring-muted hover:ring-primary/50'
-                  }`}
-                  onClick={() => goToPage(index)}
-                >
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 relative overflow-hidden rounded-md">
-                    {scene.imageUrl ? (
-                      <Image
-                        src={scene.imageUrl}
-                        alt={`Page ${index + 1}`}
-                        fill
-                        sizes="80px"
-                        style={{objectFit: "cover"}}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">{index + 1}</span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                      <span className="text-white font-bold text-xs">{index + 1}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Quiz button */}
-        {currentPage === storyPages.length - 1 && (
-          <div className="flex justify-center mt-6">
-            <Button 
-              size="lg"
-              onClick={handleGenerateQuiz}
-              className="bg-accent hover:bg-accent/90"
-            >
-              <BookOpen className="mr-2 h-5 w-5" /> {language === 'english' ? 'Generate Quiz' : 'வினாடி வினா உருவாக்கு'}
-            </Button>
-          </div>
-        )}
+          <Tag size={14} />
+          {language === 'english' ? story.category : getCategoryTranslation(story.category)}
+        </Link>
+        <h1 className="text-3xl font-bold mb-2">{displayTitle}</h1>
+        <p className="text-muted-foreground">{displayExcerpt}</p>
       </div>
 
-      {/* CSS for book flipping animation */}
+      {/* Story Book */}
+      <div 
+        ref={bookRef}
+        className="relative bg-white rounded-lg shadow-lg overflow-hidden storybook my-6"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="absolute top-2 right-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+          {currentPage + 1} / {storyPages.length}
+        </div>
+        
+        {currentScene?.imageUrl && (
+          <div className="relative h-[200px] sm:h-[250px] md:h-[300px] w-full">
+            <Image
+              src={currentScene.imageUrl}
+              alt={getSceneCaption(currentScene) || displayTitle}
+              fill
+              className="object-cover"
+            />
+            {/* Image Caption */}
+            {getSceneCaption(currentScene) && (
+              <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-xs text-center">
+                {getSceneCaption(currentScene)}
+              </div>
+            )}
+          </div>
+        )}
+        
+        <div className="p-6">
+          <div className="prose prose-sm sm:prose max-w-none">
+            {currentScene && getSceneContent(currentScene)?.split('\n\n').map((paragraph, i) => (
+              <p key={i} className={language === 'tamil' ? 'text-base font-normal leading-7' : ''}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="flex justify-between items-center mt-4">
+        <Button 
+          variant="outline" 
+          onClick={prevPage} 
+          disabled={currentPage === 0 || isFlipping}
+          className="w-[100px]"
+        >
+          <ChevronLeft className="mr-2 h-4 w-4" /> {language === 'english' ? 'Previous' : 'முந்தைய'}
+        </Button>
+        
+        <div className="flex-1 flex justify-center">
+          {storyPages.length > 0 && (
+            <div className="flex gap-1">
+              {storyPages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToPage(index)}
+                  className={`w-2 h-2 rounded-full ${index === currentPage ? 'bg-primary' : 'bg-gray-300'}`}
+                  aria-label={`Go to page ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        
+        <Button 
+          variant="outline" 
+          onClick={nextPage} 
+          disabled={currentPage === storyPages.length - 1 || isFlipping}
+          className="w-[100px]"
+        >
+          {language === 'english' ? 'Next' : 'அடுத்து'} <ChevronRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+      
+      {/* Mobile Swipe Hint */}
+      <div className="text-center text-xs text-muted-foreground mt-4 md:hidden">
+        {language === 'english' ? 'Swipe left or right to navigate' : 'செல்ல இடது அல்லது வலது புறமாக ஸ்வைப் செய்யவும்'}
+      </div>
+      
+      {/* Add some custom styles for the storybook */}
       <style jsx global>{`
-        .book-container {
-          perspective: 1200px;
+        .storybook {
+          transition: transform 0.5s ease;
         }
         
-        .book {
-          transform-style: preserve-3d;
-          transition: transform 0.5s ease-in-out;
+        .flipping-right {
+          transform: translateX(-100px);
+          opacity: 0;
+          transition: all 0.5s ease;
         }
         
-        .book.flipping-right {
-          transform: rotateY(-15deg);
-          animation: flipPageRight 0.5s ease-in-out;
+        .flipping-left {
+          transform: translateX(100px);
+          opacity: 0;
+          transition: all 0.5s ease;
         }
         
-        .book.flipping-left {
-          transform: rotateY(15deg);
-          animation: flipPageLeft 0.5s ease-in-out;
-        }
-        
-        @keyframes flipPageRight {
-          0% { transform: rotateY(0deg); }
-          50% { transform: rotateY(-15deg); }
-          100% { transform: rotateY(0deg); }
-        }
-        
-        @keyframes flipPageLeft {
-          0% { transform: rotateY(0deg); }
-          50% { transform: rotateY(15deg); }
-          100% { transform: rotateY(0deg); }
+        /* Tamil font optimizations */
+        .text-tamil {
+          font-family: 'Arial', 'Noto Sans Tamil', sans-serif;
+          line-height: 1.7;
         }
       `}</style>
     </div>
