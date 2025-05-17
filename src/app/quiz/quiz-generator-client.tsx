@@ -27,6 +27,7 @@ type QuizFormValues = z.infer<typeof quizFormSchema>;
 export default function QuizGeneratorClient() {
   const [quizResult, setQuizResult] = useState<GenerateQuizOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBrowser, setIsBrowser] = useState(false);
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
@@ -39,6 +40,14 @@ export default function QuizGeneratorClient() {
   });
 
   useEffect(() => {
+    // Set isBrowser to true once the component mounts
+    setIsBrowser(true);
+  }, []);
+
+  useEffect(() => {
+    // Only run client-side code after component has mounted
+    if (!isBrowser) return;
+
     if (typeof window !== 'undefined' && window.localStorage) {
       // Handle story-based quiz
       if (searchParams.get('source') === 'story') {
@@ -66,9 +75,11 @@ export default function QuizGeneratorClient() {
         }
       }
     }
-  }, [searchParams, form, toast]);
+  }, [searchParams, form, toast, isBrowser]);
 
   const generateVideoQuiz = async (videoLesson: VideoLesson) => {
+    if (!isBrowser) return;
+
     setIsLoading(true);
     setQuizResult(null);
     try {
@@ -96,6 +107,8 @@ export default function QuizGeneratorClient() {
   };
 
   const onSubmit: SubmitHandler<QuizFormValues> = async (data) => {
+    if (!isBrowser) return;
+
     setIsLoading(true);
     setQuizResult(null);
     try {
@@ -160,7 +173,8 @@ export default function QuizGeneratorClient() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-3">
+              
+              <Button type="submit" className="w-full text-lg font-medium py-6" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />

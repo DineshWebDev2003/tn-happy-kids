@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, GraduationCap, LibraryBig, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Home, GraduationCap, LibraryBig, ShieldCheck, MessageSquare, FolderOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMemo } from 'react';
 
-const navItems = [
+// Define the base nav items
+const baseNavItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/learn', label: 'Learn', icon: GraduationCap },
   { href: '/stories', label: 'Stories', icon: LibraryBig },
@@ -15,13 +17,32 @@ const navItems = [
 
 const BottomNav = () => {
   const pathname = usePathname();
+  
+  // Dynamically adjust navigation items based on current path
+  const navItems = useMemo(() => {
+    // If we're in the stories section, replace the Stories nav item with Categories
+    if (pathname.startsWith('/stories') && pathname !== '/stories') {
+      return baseNavItems.map(item => {
+        if (item.href === '/stories') {
+          return { href: '/stories/categories', label: 'Categories', icon: FolderOpen };
+        }
+        return item;
+      });
+    }
+    return baseNavItems;
+  }, [pathname]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border shadow-top md:hidden z-50">
       <div className="container mx-auto px-1">
         <ul className="flex justify-around items-center h-14">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+            const isActive = 
+              item.href === pathname || 
+              (item.href !== '/' && pathname.startsWith(item.href) && 
+               // Special case for Categories to avoid marking it active when on normal stories page
+               !(item.href === '/stories/categories' && pathname === '/stories'));
+              
             return (
               <li key={item.href}>
                 <Link

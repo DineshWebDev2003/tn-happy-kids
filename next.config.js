@@ -13,6 +13,10 @@ const nextConfig = {
   output: 'standalone',
   distDir: '.next',
   trailingSlash: true,
+  env: {
+    // Add environment variables to be available at build time
+    NEXT_PUBLIC_SKIP_AI_IN_BUILD: 'true',
+  },
 };
 
 module.exports = nextConfig; 

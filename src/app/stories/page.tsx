@@ -2,10 +2,12 @@
 
 import StoryCard from '@/components/story-card';
 import { stories } from '@/data/mock-data';
-import { LibraryBig, Search } from 'lucide-react';
+import { ChevronsRight, FolderOpen, LibraryBig, Search } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function StoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -36,6 +38,17 @@ export default function StoriesPage() {
             ? 'Listen to wonderful stories and let your imagination soar!' 
             : 'அற்புதமான கதைகளைக் கேட்டு உங்கள் கற்பனையை உயரச் செய்யுங்கள்!'}
         </p>
+        
+        {/* Categories Button */}
+        <div className="mb-6">
+          <Link href="/stories/categories" passHref>
+            <Button variant="outline" className="mx-auto">
+              <FolderOpen className="mr-2 h-4 w-4" />
+              {language === 'english' ? 'Browse by Category' : 'வகையின்படி உலாவுங்கள்'}
+              <ChevronsRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
         
         {/* Search and Filter Controls */}
         <div className="flex flex-col sm:flex-row items-center gap-4 max-w-3xl mx-auto mb-6">
