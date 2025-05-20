@@ -1,10 +1,10 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = ".next/standalone"
 
 [build.environment]
   NEXT_PUBLIC_SKIP_AI_IN_BUILD = "true"
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
